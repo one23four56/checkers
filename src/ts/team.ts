@@ -13,15 +13,18 @@ export default class Team {
     board: Board | undefined;
     pieces: Piece[] = [];
     side: Side | undefined;
+    menu: TeamMenu;
 
     constructor(name: string, color: string) {
         this.name = name;
         this.color = color;
+        this.menu = new TeamMenu(this);
     }
 
     addToBoard(board: Board, side: Side) {
         this.board = board;
         this.side = side;
+        document.body.appendChild(this.menu)
 
         // y levels = # of y levels to add pieces to, which is board height - 2 (2 middle spaces)
         // divided by 2 (two sides of the board) 
@@ -64,14 +67,14 @@ export default class Team {
      */
     makeMove(move: Move) {
         move.piece.moveTo(move.end[0], move.end[1]);
-        
+
         if (move.capturedPiece)
             move.capturedPiece.capture();
 
         if (this.side === Side.bottom && move.end[1] === 0)
             move.piece.makeKing()
         else if (this.side === Side.top && move.end[1] === this.board.size - 1)
-            move.piece.makeKing() 
+            move.piece.makeKing()
     }
 }
 
@@ -82,3 +85,74 @@ export interface Move {
     piece: Piece;
     capturedPiece?: Piece;
 }
+
+export class TeamMenu extends HTMLElement {
+
+    private legalMoves: HTMLParagraphElement;
+    private header: HTMLHeadingElement;
+    team: Team;
+    private history: HTMLDivElement;
+    private text: HTMLParagraphElement;
+
+    constructor(team: Team) {
+        super();
+
+        this.team = team;
+
+        this.header = this.appendChild(document.createElement("h1"));
+        this.header.innerText = team.name;
+        this.header.style.color = team.color;
+
+        this.legalMoves = this.appendChild(document.createElement("p"));
+        this.legalMoves.innerText = "0 pieces, 0 possible moves";
+
+        this.text = this.appendChild(document.createElement("p"));
+        this.text.className = "text";
+
+        this.history = this.appendChild(document.createElement("div"));
+        this.history.append("Last move:");
+    }
+
+    update() {
+        this.legalMoves.innerText =
+            `${this.team.pieces.length} piece${this.team.pieces.length === 1 ? "" : "s"}, ` +
+            `${this.team.getLegalMoves().length} possible move${this.team.getLegalMoves().length === 1 ? "" : "s"}`
+    }
+
+    /**
+     * updates who's turn it is
+     * @param ourTurn true if our turn, false if theirs
+     */
+    setTurn(ourTurn: boolean) {
+        this.update()
+        ourTurn && this.classList.add("our-turn")
+        ourTurn || this.classList.remove("our-turn")
+    }
+
+    setWinner() {
+        this.classList.add("winner")
+    }
+
+    /**
+     * Adds a move to the history menu
+     * @param move move to add
+     * @param clear whether or not to clear the previous move (default: true)
+     */
+    addToHistory(move: Move, clear: boolean = true) {
+        clear && (this.history.innerText = "");
+
+        this.history.append(
+            clear ? "Last move:" : "",
+            document.createElement("br"),
+            `(${move.start.join(", ")}) ${move.capture ? "⇉" : "→"} (${move.end.join(", ")})`
+        );
+
+    }
+
+    setText(text: string) {
+        this.text.innerText = text;
+    }
+
+}
+
+customElements.define('team-menu', TeamMenu)

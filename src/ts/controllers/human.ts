@@ -6,7 +6,10 @@ export default class HumanController implements Controller {
     name: string = "Human";
     difficulty: number = 10;
 
-    pickMove(moves: Move[], board: Board, us: Team, them: Team): Promise<number> {
+    pickMove(moves: Move[], board: Board, us: Team, _them: Team): Promise<number> {
+
+        us.menu.setText("Click and drag a piece with your mouse to move it.")
+
         return new Promise<number>(res => {
 
             // used to remove the event listeners
@@ -16,6 +19,7 @@ export default class HumanController implements Controller {
             controller.signal.addEventListener("abort", () => moves.forEach(move => {
                 move.piece.style.cursor = "default"
                 move.piece.draggable = false;
+                us.menu.setText("")
             }))
 
             for (const [index, move] of moves.entries()) {

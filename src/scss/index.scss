@@ -4,15 +4,27 @@ body, html {
     height: 100%;
     top: 0;
     left: 0;
-    
-    display: flex;
+    margin: 0;
+}
+
+body {
+    display: grid;
+    grid-template-areas: 
+    'left board right'
+    'eval eval eval';
+
+    grid-template-columns: 1fr 1fr 1fr;
+
     align-items: center;
-    justify-content: center;
+    justify-items: center;
 }
 
 board-element {
     display: inline-block;
+    width: fit-content;
+    height: fit-content;
     border: 1em solid gray;
+    grid-area: board;
 
     div {
         display: flex;
@@ -54,5 +66,68 @@ piece-element {
 
     &.king {
         border: 0.25em solid white;
+    }
+}
+
+team-menu {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h1 {
+        font-size: 3em;
+        margin: 0;
+        margin-bottom: 0.25em;
+    }
+
+    &.our-turn h1::before {
+        content: '🤔 ';
+    }
+
+    &.winner h1 {
+        &::before {
+            content: '🏆 ';
+        }
+        &::after {
+            content: ' (WINNER)';
+        }
+    }
+
+    p {
+        font-size: 1.25em;
+        margin: 0em;
+        margin-bottom: 0.5em;
+        text-align: center;
+
+        &.text {
+            font-size: 1.15em;
+        }
+    }
+
+    div {
+        text-align: center;
+        font-size: 1.05em;
+    }
+}
+
+div.eval {
+    grid-area: eval;
+    width: 90%;
+    height: 3rem;
+    position: relative;
+
+    div {
+        position: absolute;
+        height: 100%;
+        transition: width 250ms;
+
+        &:nth-child(2) {
+            right: 0;
+        }
     }
 }
