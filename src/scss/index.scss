@@ -1,0 +1,58 @@
+body, html {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+board-element {
+    display: inline-block;
+    border: 1em solid gray;
+
+    div {
+        display: flex;
+
+        cell-element {
+            display: inline-flex;
+            width: 5rem;
+            height: 5rem;
+            margin: 0;
+
+            justify-content: center;
+            align-items: center;
+
+            &.black {
+                background-color: black;
+
+                &.highlight {
+                    background-color: hsl(0, 0%, 20%);
+                }
+            }
+
+            &.white {
+                background-color: white;
+
+                &.highlight {
+                    background-color: hsl(0, 0%, 80%);
+                }
+            }
+        }
+    }
+}
+
+piece-element {
+    display: inline-block;
+    width: 4em;
+    height: 4em;
+    border-radius: 100%;
+    user-select: none;
+
+    &.king {
+        border: 0.25em solid white;
+    }
+}
