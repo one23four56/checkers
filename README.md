@@ -1,0 +1,3 @@
+# checkers
+
+Simple checkers

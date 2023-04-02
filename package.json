@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "esbuild": "^0.17.15",
+    "sass": "^1.60.0",
+    "typescript": "^5.0.3"
+  },
+  "name": "checkers",
+  "author": {
+    "name": "Jason M"
+  },
+  "scripts": {
+    "check": "tsc",
+    "start": "cd scripts && start.bat"
+  }
+}
