@@ -2,7 +2,7 @@ import Board, { Cell } from "../board";
 import Controller from "../controller";
 import Team, { Move } from "../team";
 
-export default class HumanController implements Controller {
+export class HumanController implements Controller {
     name: string = "Human";
     difficulty: number = 10;
 
