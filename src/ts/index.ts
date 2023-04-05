@@ -1,21 +1,20 @@
 import Board from './board'
 import Team, { Move } from './team'
-import RandomController from './controllers/random';
-import HumanController from './controllers/human';
+import * as controller from './controllers/index'
 import Controller from './controller';
 
-const WAIT_TIME = 100;
+const WAIT_TIME = 200;
 
 function runGame(size: number) {
     const board = document.body.appendChild(new Board(size))
 
-    const team1 = new Team('Team 1', 'red');
-    const team2 = new Team('Team 2', 'blue');
+    const team1 = new Team('Blue', 'blue');
+    const team2 = new Team('Red', 'red');
 
-    board.setUpTeams(team1, team2);
+    board.setUpTeams(team2, team1);
 
-    const controller1 = new RandomController();
-    const controller2 = new RandomController();
+    const controller1 = new controller.MediumController(); // red
+    const controller2 = new controller.EngineController(1); // blue
     
     const 
         evalBar = document.body.appendChild(document.createElement("div")),
@@ -26,14 +25,14 @@ function runGame(size: number) {
     eval1.style.width = "50%"
     eval2.style.width = "50%"
 
-    eval1.style.backgroundColor = team1.color;
-    eval2.style.backgroundColor = team2.color;
+    eval1.style.backgroundColor = team2.color;
+    eval2.style.backgroundColor = team1.color;
 
     // helper function to update eval
     const updateEval = () => {
         const pieces = team1.pieces.length + team2.pieces.length
-        eval1.style.width = (team1.pieces.length / pieces) * 100 + "%"
-        eval2.style.width = (team2.pieces.length / pieces) * 100 + "%"
+        eval1.style.width = (team2.pieces.length / pieces) * 100 + "%"
+        eval2.style.width = (team1.pieces.length / pieces) * 100 + "%"
     }
 
     // helper function to wait
@@ -63,11 +62,22 @@ function runGame(size: number) {
     }
 
     // helper function that determines if a team has won
-    const isVictory = (team1: Team, team2: Team): Team | false => {
-        if (team1.pieces.length === 0 || team1.getLegalMoves().length === 0)
+
+    enum WhoseTurn {
+        team1, team2
+    }
+
+    const isVictory = (team1: Team, team2: Team, turn: WhoseTurn): Team | false => {
+        if (team1.pieces.length === 0)
             return team2;
 
-        if (team2.pieces.length === 0 || team2.getLegalMoves().length === 0)
+        if (team2.pieces.length === 0)
+            return team1;
+
+        if (turn === WhoseTurn.team1 && team1.getLegalMoves().length === 0)
+            return team2;
+
+        if (turn === WhoseTurn.team2 && team2.getLegalMoves().length === 0)
             return team1;
 
         return false;
@@ -80,8 +90,8 @@ function runGame(size: number) {
         await move(team1, controller1, team2)
 
         // check for victory
-        if (isVictory(team1, team2))
-            return isVictory(team1, team2) as Team
+        if (isVictory(team1, team2, WhoseTurn.team2))
+            return isVictory(team1, team2, WhoseTurn.team2) as Team
 
         await time(WAIT_TIME)
 
@@ -89,8 +99,8 @@ function runGame(size: number) {
         await move(team2, controller2, team1)
 
         // check for victory
-        if (isVictory(team1, team2))
-            return isVictory(team1, team2) as Team
+        if (isVictory(team1, team2, WhoseTurn.team1))
+            return isVictory(team1, team2, WhoseTurn.team1) as Team
 
         // do another round
         await time(WAIT_TIME)
@@ -101,6 +111,11 @@ function runGame(size: number) {
         team1.menu.setTurn(false);
         team2.menu.setTurn(false);
         winner.menu.setWinner();
+
+        evalBar.style.backgroundColor = winner.color;
+        eval1.style.width = "0%";
+        eval2.style.width = "0%";
+        evalBar.innerText = winner.name.toUpperCase() + " WINS";
     }));
 
 }

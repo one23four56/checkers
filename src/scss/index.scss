@@ -26,13 +26,16 @@ board-element {
     border: 1em solid gray;
     grid-area: board;
 
+    height: 80%;
+    aspect-ratio: 1/1;
+
     div {
         display: flex;
 
         cell-element {
             display: inline-flex;
-            width: 5rem;
-            height: 5rem;
+            height: 100%;
+            aspect-ratio: 1/1;
             margin: 0;
 
             justify-content: center;
@@ -59,13 +62,13 @@ board-element {
 
 piece-element {
     display: inline-block;
-    width: 4em;
-    height: 4em;
+    height: 80%;
+    aspect-ratio: 1/1;
     border-radius: 100%;
     user-select: none;
 
     &.king {
-        border: 0.25em solid white;
+        outline: 5% solid white;
     }
 }
 
@@ -121,10 +124,22 @@ div.eval {
     height: 3rem;
     position: relative;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    letter-spacing: 0.25em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+
     div {
         position: absolute;
         height: 100%;
         transition: width 250ms;
+
+        &:first-child {
+            left: 0;
+        }
 
         &:nth-child(2) {
             right: 0;

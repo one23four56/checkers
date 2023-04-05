@@ -22,6 +22,7 @@ export default class Board extends HTMLElement {
             const div = this.appendChild(document.createElement("div"))
             div.className = "row"
             div.dataset.y = y.toString();
+            div.style.height = (100 / size) + "%";
 
             for (let x = 0; x < size; x++)
                 this.cells[y].push(
