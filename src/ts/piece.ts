@@ -17,7 +17,7 @@ export default class Piece extends HTMLElement {
 
         this.x = startingCell.x;
         this.y = startingCell.y;
-        
+
         startingCell.piece = this;
         this.cell = startingCell;
 
@@ -45,7 +45,7 @@ export default class Piece extends HTMLElement {
             return diagonals;
 
         // otherwise, remove backwards movement
-        
+
         // if we are on bottom, remove where △y is positive
         if (this.team.side === Side.bottom)
             diagonals = diagonals.filter(([_x, y]) => y - this.y < 0)
@@ -66,7 +66,7 @@ export default class Piece extends HTMLElement {
 
         for (const [x, y] of this.getDiagonals()) {
             const cell = this.board.getCell(x, y)
-            
+
             // if cell is not occupied, move is legal
             if (!cell.piece) {
                 results.push({
@@ -149,9 +149,75 @@ export default class Piece extends HTMLElement {
     makeKing() {
         if (this.type === PieceType.king)
             return;
-        
+
         this.type = PieceType.king;
         this.classList.add("king")
+    }
+
+    private originalXs: Record<number, number> = {};
+    private originalYs: Record<number, number> = {};
+    private originalCells: Record<number, Cell> = {};
+
+    /**
+     * Performs a fake (virtual) move of the piece  
+     * Used by some controllers for analysis
+     * @param destination x and y to move to
+     * @param layer virtual layer to use
+     */
+    virtualMove([x, y]: [number, number], layer: number) {
+        // get cell
+        const cell = this.board.getCell(x, y);
+
+        // set original data if not set
+        if (!this.originalCells[layer]) {
+            this.originalCells[layer] = this.cell;
+            this.originalXs[layer] = this.x;
+            this.originalYs[layer] = this.y;
+        }
+
+        // update data
+        this.x = x;
+        this.y = y;
+        this.cell.piece = undefined;
+        this.cell = cell;
+        cell.piece = this;
+    }
+
+    /**
+     * Performs a fake (virtual) capture of this piece  
+     * Used by some controllers for analysis
+     * @param layer virtual layer to use
+     */
+    virtualCapture(layer: number) {
+
+        if (!this.originalCells[layer]) {
+            this.originalCells[layer] = this.cell;
+            this.originalXs[layer] = this.x;
+            this.originalYs[layer] = this.y;
+        }
+
+        this.cell.piece = undefined;
+        this.team.pieces = this.team.pieces.filter(p => p !== this);
+    }
+
+    /**
+     * Resets the piece to the state it was in before any virtual moves took place
+     * @param layer virtual layer to use
+     */
+    reset(layer: number) {
+        this.cell.piece = undefined;
+
+        this.team.pieces.find(p => p === this) || this.team.pieces.push(this);
+
+        this.cell = this.originalCells[layer];
+        this.x = this.originalXs[layer];
+        this.y = this.originalYs[layer];
+
+        this.cell.piece = this;
+
+        delete this.originalCells[layer];
+        delete this.originalXs[layer];
+        delete this.originalYs[layer];
     }
 }
 
