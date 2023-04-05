@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "esbuild": "^0.17.15",
+    "html-minifier": "^4.0.0",
     "sass": "^1.60.0",
     "typescript": "^5.0.3"
   },
@@ -10,6 +11,7 @@
   },
   "scripts": {
     "check": "tsc",
-    "start": "cd scripts && start.bat"
+    "start": "cd scripts && start.bat",
+    "pack": "cd scripts && pack.bat"
   }
 }
