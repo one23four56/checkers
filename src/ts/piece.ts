@@ -79,7 +79,7 @@ export default class Piece extends HTMLElement {
             }
 
             // if cell is occupied by a friendly piece, no move is possible
-            if (cell.piece.team.name === this.team.name)
+            if (cell.piece.team.color === this.team.color)
                 continue;
 
             // the only possibility now is that the cell is occupied by an enemy piece

@@ -1,21 +1,20 @@
 import Board from '../board';
-import Controller from '../controller';
+import Controller, { Difficulty } from '../controller';
 import Team, { Move } from '../team';
 
 export class MediumController implements Controller {
     name: string = "Medium";
-    difficulty: number = 0;
+    difficulty: Difficulty = Difficulty.medium;
+    description: string = "Plays defensively, but occasionally messes up.";
 
     async pickMove(moves: Move[], board: Board, us: Team, them: Team): Promise<number> {
-
-        us.menu.setText("Doesn't like to lose pieces, but occasionally messes up.")
 
         let result: [Move, number][];
         // first eliminate any moves that will result in this piece getting captured, if possible
         let filtered: [Move, number][] = moves.map<[Move, number]>((m, i) => [m, i])
             .filter(([move]) => {
                 
-                if (Math.floor(Math.random() * 5) === 1)
+                if (Math.floor(Math.random() * 10) === 1)
                     return true; // small chance to intentionally blunder to make it easier
 
                 move.piece.moveTo(move.end[0], move.end[1]);

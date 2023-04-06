@@ -1,26 +1,30 @@
 import Board from './board'
 import Team, { Move } from './team'
-import * as controller from './controllers/index'
 import Controller from './controller';
+import { getControllers, hideMenu, loadMenu } from './menu';
 
 const WAIT_TIME = 200;
+loadMenu();
 
-function runGame(size: number) {
-    const board = document.body.appendChild(new Board(size))
+async function game() {
+    const controllers = await getControllers();
+    hideMenu();
 
-    const team1 = new Team('Blue', 'blue');
-    const team2 = new Team('Red', 'red');
+    const board = document.body.appendChild(new Board(8))
+
+    const team1 = new Team(controllers[1].name, 'blue');
+    const team2 = new Team(controllers[0].name, 'red');
 
     board.setUpTeams(team2, team1);
 
-    const controller1 = new controller.MediumController(); // red
-    const controller2 = new controller.EngineController(1); // blue
-    
-    const 
+    const controller1 = controllers[1] // blue
+    const controller2 = controllers[0] // red
+
+    const
         evalBar = document.body.appendChild(document.createElement("div")),
         eval1 = evalBar.appendChild(document.createElement("div")),
         eval2 = evalBar.appendChild(document.createElement("div"));
-    
+
     evalBar.className = "eval"
     eval1.style.width = "50%"
     eval2.style.width = "50%"
@@ -36,13 +40,13 @@ function runGame(size: number) {
     }
 
     // helper function to wait
-    const time = (time: number) => new Promise<void>(res => setTimeout(res, time)) 
+    const time = (time: number) => new Promise<void>(res => setTimeout(res, time))
 
     // async helper function to make moves
     const move = async (team: Team, controller: Controller, otherTeam: Team, moveOverride?: Move[]) => {
         team.menu.setTurn(true);
         otherTeam.menu.setTurn(false);
-        
+
         const legalMoves = moveOverride ?? team.getLegalMoves();
         const moveMade = legalMoves[await controller.pickMove(
             legalMoves, board, team, otherTeam
@@ -115,9 +119,8 @@ function runGame(size: number) {
         evalBar.style.backgroundColor = winner.color;
         eval1.style.width = "0%";
         eval2.style.width = "0%";
-        evalBar.innerText = winner.name.toUpperCase() + " WINS";
+        evalBar.innerText = winner.color.toUpperCase() + " WINS";
     }));
 
 }
-
-runGame(8)
+game()

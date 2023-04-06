@@ -1,10 +1,11 @@
 import Board, { Cell } from "../board";
-import Controller from "../controller";
+import Controller, { Difficulty } from "../controller";
 import Team, { Move } from "../team";
 
 export class HumanController implements Controller {
     name: string = "Human";
-    difficulty: number = 10;
+    difficulty: Difficulty = Difficulty.human;
+    description: string = "A human player.";
 
     pickMove(moves: Move[], board: Board, us: Team, _them: Team): Promise<number> {
 
@@ -23,22 +24,24 @@ export class HumanController implements Controller {
             }))
 
             for (const [index, move] of moves.entries()) {
+                const start = move.start.toString()
                 move.piece.style.cursor = "pointer"
                 move.piece.draggable = true;
 
                 const cell = board.getCell(move.end[0], move.end[1])
 
                 cell.addEventListener("dragover", event => {
-                    if (event.dataTransfer.getData("piece") !== move.start.toString())
+                    event.preventDefault()
+                    if (event.dataTransfer.getData("piece") !== start)
                         return;
 
-                    event.preventDefault()
                     cell.highlight()
                     event.dataTransfer.dropEffect = "move"
                 }, { signal: controller.signal })
 
                 move.piece.addEventListener("dragstart", event => {
-                    event.dataTransfer.setData("piece", move.start.toString())
+                    event.dataTransfer.setData("piece", start)
+                    event.dataTransfer.setDragImage(move.piece, move.piece.offsetWidth/2, move.piece.offsetHeight/2)
                 }, { signal: controller.signal })
 
                 cell.addEventListener("dragleave", () => {
@@ -46,7 +49,7 @@ export class HumanController implements Controller {
                 }, { signal: controller.signal })
                 
                 cell.addEventListener("drop", event => {
-                    if (event.dataTransfer.getData("piece") !== move.start.toString())
+                    if (event.dataTransfer.getData("piece") !== start)
                         return;
 
                     cell.unHighlight()

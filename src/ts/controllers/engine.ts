@@ -1,5 +1,5 @@
 import Board from '../board';
-import Controller from '../controller'
+import Controller, { Difficulty } from '../controller'
 import Piece, { PieceType } from '../piece';
 import Team, { Move, Side } from '../team';
 
@@ -12,20 +12,31 @@ export interface EngineOptions {
      * the higher it is, the more it tries to promote its pieces and prevent the enemy from promoting
      */
     promotionValue: number;
+    /**
+     * the higher it is, the more it tries to make the enemy have no moves to play
+     */
+    noMovesValue: number;
+    /**
+     * lower = favor long-term moves, higher = favor short-term moves
+     */
+    decay: number;
 }
 
 export class EngineController implements Controller, EngineOptions {
     name: string = "Engine";
-    difficulty: number = 0;
+    difficulty: Difficulty = Difficulty.veryHard;
+    description: string = "Advanced checkers engine."
 
     /**
      * The depth of the engine (how many rounds of analysis are performed)
      */
     depth: number;
     kingCaptureValue: number = 1;
-    promotionValue: number = 4;
+    promotionValue: number = 1;
+    noMovesValue: number = 8;
+    decay: number = 4;
 
-    constructor(depth: 1 | 2 | 3, options: Partial<EngineOptions> = {}) {
+    constructor(depth: 1 | 2 | 3 = 2, options: Partial<EngineOptions> = {}) {
         if (depth > 3 || depth < 1)
             // depths above 3 (6, see below comment) are really laggy
             throw new Error("Engine depth must be either 1, 2, or 3");
@@ -82,7 +93,7 @@ export class EngineController implements Controller, EngineOptions {
 
             // add score if the enemy has no possible moves 
             if (moves.length === 0)
-                score += 8
+                score += this.noMovesValue
 
             // add score if we promote
             if (
@@ -97,7 +108,7 @@ export class EngineController implements Controller, EngineOptions {
             capturedPieces[depth] && capturedPieces[depth].forEach(p => p.reset(depth))
             capturedPieces[depth] = []
 
-            return score / 4;
+            return score / this.decay;
 
         }
 

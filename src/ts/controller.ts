@@ -7,9 +7,13 @@ export default interface Controller {
      */
     name: string;
     /**
-     * Difficulty from 1 (super easy) to 10 (super hard)
+     * Difficulty
      */
-    difficulty: number;
+    difficulty: Difficulty;
+    /**
+     * A brief description
+     */
+    description: string;
     /**
      * Picks a move
      * @param moves array of all possible moves
@@ -19,4 +23,13 @@ export default interface Controller {
      * @returns the index of the move on the move list that the controller chose
      */
     pickMove: (moves: Move[], board: Board, us: Team, them: Team) => Promise<number>;
+}
+
+export enum Difficulty {
+    veryEasy = "Very Easy",
+    easy = "Easy",
+    medium = "Medium",
+    hard = "Hard",
+    veryHard = "Very Hard",
+    human = "Varies"
 }

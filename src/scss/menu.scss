@@ -1,0 +1,106 @@
+
+h1 {
+    color: red;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 7em;
+    font-weight: 500;
+    animation: color 20s linear infinite forwards;
+    rotate: 0deg;
+    margin: 2.5%;
+}
+
+
+@keyframes color {
+    @for $i from 0 through 10 {
+        #{($i * calc(100/10)) + "%"} {
+            color: hsl((calc(360/10*$i)), 100%, 40%);
+
+            @if $i % 2==0 {
+                rotate: 10deg;
+            }
+
+            @else {
+                rotate: -10deg;
+            }
+        }
+    }
+}
+
+div.teams {
+    height: 50%;
+    border: 1em solid gray;
+    width: 70%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
+    h2 {
+        font-size: 3em;
+    }
+
+    div.team {
+        width: 40%;
+        height: 90%;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+
+        > div {
+            overflow-y: auto;
+        }
+
+        h2 {
+            font-size: 2em;
+        }
+
+        &.red h2 {
+            color: red;
+        }
+
+        &.blue h2 {
+            color: blue;
+        }
+
+        > div > div {
+            width: 90%;
+            margin: 2.5%;
+            padding: 2.5%;
+            user-select: none;
+            background-color: hsl(0, 0%, 83%);
+            font-size: 1.25em;
+            cursor: pointer;
+
+            b {
+                float: left;
+            }
+
+            span {
+                float: right;
+            }
+
+            p {
+                margin: 0;
+                font-size: 0.75em;
+                margin-top: 0.5em;
+            }
+
+            &:hover, &.selected {
+                background-color: hsl(0, 0%, 70%);
+            }
+        }
+    }
+}
+
+button {
+    margin: 1em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1.5em;
+    width: 20%;
+    border: none;
+    padding: 0.5em;
+    cursor: pointer;
+}

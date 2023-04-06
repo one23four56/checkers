@@ -1,14 +1,14 @@
 import Board from '../board';
-import Controller from '../controller'
+import Controller, { Difficulty } from '../controller'
 import Team, { Move } from '../team';
 
 export class EasyController implements Controller {
     name: string = "Easy";
-    difficulty: number = 3;
+    difficulty: Difficulty = Difficulty.easy;
+    description: string = "Moves its pieces towards yours and makes a lot of mistakes.";
 
     async pickMove(moves: Move[], board: Board, us: Team, them: Team): Promise<number> {
 
-        us.menu.setText("Moves its pieces towards yours.")
 
         const theirAvgX = them.pieces.reduce((acc, cur) => acc + cur.x, 0) / them.pieces.length
         const theirAvgY = them.pieces.reduce((acc, cur) => acc + cur.y, 0) / them.pieces.length

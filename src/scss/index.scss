@@ -7,142 +7,30 @@ body, html {
     margin: 0;
 }
 
-body {
+body.game {
     display: grid;
     grid-template-areas: 
     'left board right'
     'eval eval eval';
 
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto min-content;
 
     align-items: center;
     justify-items: center;
+
+    @import "game.scss";
 }
 
-board-element {
-    display: inline-block;
-    width: fit-content;
-    height: fit-content;
-    border: 1em solid gray;
-    grid-area: board;
-
-    height: 80%;
-    aspect-ratio: 1/1;
-
-    div {
-        display: flex;
-
-        cell-element {
-            display: inline-flex;
-            height: 100%;
-            aspect-ratio: 1/1;
-            margin: 0;
-
-            justify-content: center;
-            align-items: center;
-
-            &.black {
-                background-color: black;
-
-                &.highlight {
-                    background-color: hsl(0, 0%, 20%);
-                }
-            }
-
-            &.white {
-                background-color: white;
-
-                &.highlight {
-                    background-color: hsl(0, 0%, 80%);
-                }
-            }
-        }
-    }
-}
-
-piece-element {
-    display: inline-block;
-    height: 80%;
-    aspect-ratio: 1/1;
-    border-radius: 100%;
-    user-select: none;
-
-    &.king {
-        outline: 0.25em solid white;
-    }
-}
-
-team-menu {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 100%;
-    height: 100%;
-
+body.menu {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 
-    h1 {
-        font-size: 3em;
-        margin: 0;
-        margin-bottom: 0.25em;
-    }
-
-    &.our-turn h1::before {
-        content: '🤔 ';
-    }
-
-    &.winner h1 {
-        &::before {
-            content: '🏆 ';
-        }
-        &::after {
-            content: ' (WINNER)';
-        }
-    }
-
-    p {
-        font-size: 1.25em;
-        margin: 0em;
-        margin-bottom: 0.5em;
-        text-align: center;
-
-        &.text {
-            font-size: 1.15em;
-        }
-    }
-
-    div {
-        text-align: center;
-        font-size: 1.05em;
-    }
+    @import "menu.scss";
 }
 
-div.eval {
-    grid-area: eval;
-    width: 90%;
-    height: 3rem;
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2em;
-    letter-spacing: 0.25em;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
-
-    div {
-        position: absolute;
-        height: 100%;
-        transition: width 250ms;
-
-        &:first-child {
-            left: 0;
-        }
-
-        &:nth-child(2) {
-            right: 0;
-        }
-    }
+*.hidden {
+    display: none;
 }
