@@ -2,9 +2,11 @@
     "compilerOptions": {
         "noEmit": true,
         "target": "ESNext",
-        "isolatedModules": true
+        "isolatedModules": true,
+        "moduleResolution": "nodenext"
     },
     "files": [
-        "src/ts/index.ts"
+        "src/ts/index.ts",
+        "globals.d.ts"
     ]
 }

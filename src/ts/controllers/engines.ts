@@ -12,9 +12,9 @@ export class HardController extends EngineController implements Controller {
     constructor() {
         super(1, {
             kingCaptureValue: 2,
-            promotionValue: 4,
+            promotionValue: 5,
             noMovesValue: 0,
-            decay: 1
+            decay: 0.9
         })
     }
 }

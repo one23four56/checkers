@@ -1,5 +1,7 @@
 import Board, { Cell } from "./board";
 import Team, { Move, Side } from './team'
+import forwardSvg from '../static/forward.svg'
+import bothSvg from '../static/both.svg'
 
 export default class Piece extends HTMLElement {
     team: Team;
@@ -21,7 +23,12 @@ export default class Piece extends HTMLElement {
         startingCell.piece = this;
         this.cell = startingCell;
 
-        this.board = team.board
+        this.board = team.board;
+
+        this.innerHTML = forwardSvg;
+
+        if (this.team.side === Side.top)
+            this.classList.add("flip-svg")
     }
 
     private getDiagonals(): [number, number][] {
@@ -152,6 +159,7 @@ export default class Piece extends HTMLElement {
 
         this.type = PieceType.king;
         this.classList.add("king")
+        this.innerHTML = bothSvg;
     }
 
     private originalXs: Record<number, number> = {};

@@ -40,14 +40,27 @@ board-element {
 }
 
 piece-element {
-    display: inline-block;
+    display: inline-flex;
     height: 80%;
     aspect-ratio: 1/1;
     border-radius: 100%;
     user-select: none;
 
-    &.king {
-        outline: 0.25em solid white;
+    align-items: center;
+    justify-content: center;
+
+    // &.king {
+    //     // outline: 0.25em solid white;
+    //     // filter: contrast(120%);
+    // }
+
+    svg {
+        width: 55%;
+        opacity: 0.35;
+    }
+
+    &.flip-svg svg {
+        rotate: 180deg;
     }
 }
 
