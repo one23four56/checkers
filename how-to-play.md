@@ -10,6 +10,8 @@ In Checkers, pieces may only ever move diagonally, meaning they only ever use th
 
 If an **enemy** piece is located in one the squares that your piece can move to, your piece may jump over the enemy piece, as long as the square it will land on exists and is not occupied by **any** piece. Jumping over a piece captures it.
 
+![capture-piece](https://user-images.githubusercontent.com/72141247/231005280-ed41e89c-8de6-4c9a-8268-ad6edd22293b.png)
+
 You can chain jumps together. If you jump over a piece and are able to capture another, you must jump over that piece as well. When you capture a piece, your turn does not end until the piece that you used to capture is not able to make any more jumps.
 
 **Important Note:** If it is your turn and you can capture a piece, *you must*. If you are trying to make a move and it is not letting you, that is not a bug, that means you have a capture that you must do.
