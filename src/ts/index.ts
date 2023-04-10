@@ -2,11 +2,17 @@ import Board from './board'
 import Team, { Move } from './team'
 import Controller from './controller';
 import { getControllers, hideMenu, loadMenu } from './menu';
+import { EngineController } from './controllers';
 
-const WAIT_TIME = 200;
+const WAIT_TIME = 100;
 loadMenu();
 
 async function game() {
+    // used for analysis of moves
+    const engine = new EngineController(1)
+    const analyze = (moves: Move[], board: Board, us: Team, them: Team) =>
+        engine.doAnalysis(moves, board, us, them)
+
     const controllers = await getControllers();
     hideMenu();
 
@@ -47,10 +53,22 @@ async function game() {
         team.menu.setTurn(true);
         otherTeam.menu.setTurn(false);
 
-        const legalMoves = moveOverride ?? team.getLegalMoves();
-        const moveMade = legalMoves[await controller.pickMove(
-            legalMoves, board, team, otherTeam
-        )]
+        const
+            legalMoves = moveOverride ?? team.getLegalMoves(),
+            index = await controller.pickMove(legalMoves, board, team, otherTeam),
+            moveMade = legalMoves[index];
+
+        const
+            rankings = analyze(
+                legalMoves,
+                board.cloneNode(true) as Board,
+                team,
+                otherTeam
+            ),
+            ranking = rankings.sort((a, b) => b[0] - a[0]).findIndex(i => i[2] === index);
+
+        team.moveScore += rankings[index][0];
+        team.updateAccuracy(1 - (ranking / rankings.length));
 
         team.makeMove(moveMade);
         team.menu.addToHistory(moveMade, !moveOverride);
@@ -115,6 +133,9 @@ async function game() {
         team1.menu.setTurn(false);
         team2.menu.setTurn(false);
         winner.menu.setWinner();
+
+        team1.menu.setText(`Avg. Accuracy: ${team1.accuracy.toFixed(2)}%\nOverall Score: ${team1.moveScore.toFixed(2)}`)
+        team2.menu.setText(`Avg. Accuracy: ${team2.accuracy.toFixed(2)}%\nOverall Score: ${team2.moveScore.toFixed(2)}`)
 
         evalBar.style.backgroundColor = winner.color;
         eval1.style.width = "0%";

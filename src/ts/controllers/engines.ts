@@ -14,7 +14,8 @@ export class HardController extends EngineController implements Controller {
             kingCaptureValue: 2,
             promotionValue: 5,
             noMovesValue: 0,
-            decay: 0.9
+            decay: 0.9,
+            deadPiecePenalty: 0.5
         })
     }
 }

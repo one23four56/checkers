@@ -7,6 +7,7 @@ export enum Side {
 }
 
 export default class Team {
+    [x: string]: any;
 
     name: string;
     color: string;
@@ -76,6 +77,20 @@ export default class Team {
         else if (this.side === Side.top && move.end[1] === this.board.size - 1)
             move.piece.makeKing()
     }
+
+    private accuracyMoveCount: number = 0;
+    private accuracyAccumulation: number = 0;
+
+    updateAccuracy(number: number) {
+        this.accuracyMoveCount++;
+        this.accuracyAccumulation += number;
+    }
+
+    get accuracy(): number {
+        return (this.accuracyAccumulation / this.accuracyMoveCount) * 100;
+    }
+
+    moveScore: number = 0;
 }
 
 export interface Move {
