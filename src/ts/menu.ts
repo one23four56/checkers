@@ -49,6 +49,6 @@ export function hideMenu() {
 
 export function showMenu() {
     document.body.className = "menu"
-    document.querySelectorAll(":not(.start-menu-item, script)").forEach(e => e.remove());
+    document.querySelectorAll("body > *:not(.start-menu-item, script)").forEach(e => e.remove());
     document.querySelectorAll(".start-menu-item").forEach(e => e.classList.remove("start-menu-item", "hidden"))
 }

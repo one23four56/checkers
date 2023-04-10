@@ -1,7 +1,7 @@
 import Board from './board'
 import Team, { Move } from './team'
 import Controller from './controller';
-import { getControllers, hideMenu, loadMenu } from './menu';
+import { getControllers, hideMenu, loadMenu, showMenu } from './menu';
 import { EngineController } from './controllers';
 
 const WAIT_TIME = 100;
@@ -61,7 +61,7 @@ async function game() {
         const
             rankings = analyze(
                 legalMoves,
-                board.cloneNode(true) as Board,
+                board,
                 team,
                 otherTeam
             ),
@@ -141,6 +141,13 @@ async function game() {
         eval1.style.width = "0%";
         eval2.style.width = "0%";
         evalBar.innerText = winner.color.toUpperCase() + " WINS";
+
+        const button = document.body.appendChild(document.createElement("button"))
+        button.innerText = "New Game"
+        button.addEventListener("click", () => {
+            showMenu()
+            game()
+        })
     }));
 
 }
