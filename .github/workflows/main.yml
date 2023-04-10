@@ -12,4 +12,4 @@ jobs:
         with:
           node-version: 19
       - run: npm ci # install
-      - run: npm check # run typescript check
+      - run: npm run check # run typescript check
